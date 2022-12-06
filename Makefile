@@ -1,5 +1,5 @@
 # we assume that the utilities from RISC-V cross-compiler (i.e., riscv64-unknown-elf-gcc and etc.)
-# are in your system PATH. To check if your environment satisfies this requirement, simple use 
+# are in your system PATH. To check if your environment satisfies this requirement, simple use
 # `which` command as follows:
 # $ which riscv64-unknown-elf-gcc
 # if you have an output path, your environment satisfy our requirement.
@@ -12,7 +12,7 @@ RANLIB        	:= $(CROSS_PREFIX)ranlib
 
 SRC_DIR        	:= .
 OBJ_DIR 		:= obj
-SPROJS_INCLUDE 	:= -I.  
+SPROJS_INCLUDE 	:= -I.
 
 ifneq (,)
   march := -march=
@@ -63,17 +63,17 @@ SPIKE_INF_LIB   := $(OBJ_DIR)/spike_interface.a
 
 
 #---------------------	user   -----------------------
-USER_CPPS 		:= user/*.c 
+USER_CPPS 		:= user/*.c
 
 USER_CPPS  		:= $(wildcard $(USER_CPPS))
 USER_OBJS  		:= $(addprefix $(OBJ_DIR)/, $(patsubst %.c,%.o,$(USER_CPPS)))
 
 
 
-USER_TARGET 	:= $(OBJ_DIR)/app_two_long_loops
+USER_TARGET 	:= $(OBJ_DIR)/app_sum_sequence
 #------------------------targets------------------------
 $(OBJ_DIR):
-	@-mkdir -p $(OBJ_DIR)	
+	@-mkdir -p $(OBJ_DIR)
 	@-mkdir -p $(dir $(UTIL_OBJS))
 	@-mkdir -p $(dir $(SPIKE_INF_OBJS))
 	@-mkdir -p $(dir $(KERNEL_OBJS))
@@ -88,12 +88,12 @@ $(OBJ_DIR)/%.o : %.S
 	@$(COMPILE) -c $< -o $@
 
 $(UTIL_LIB): $(OBJ_DIR) $(UTIL_OBJS)
-	@echo "linking " $@	...	
-	@$(AR) -rcs $@ $(UTIL_OBJS) 
+	@echo "linking " $@	...
+	@$(AR) -rcs $@ $(UTIL_OBJS)
 	@echo "Util lib has been build into" \"$@\"
-	
+
 $(SPIKE_INF_LIB): $(OBJ_DIR) $(UTIL_OBJS) $(SPIKE_INF_OBJS)
-	@echo "linking " $@	...	
+	@echo "linking " $@	...
 	@$(AR) -rcs $@ $(SPIKE_INF_OBJS) $(UTIL_OBJS)
 	@echo "Spike lib has been build into" \"$@\"
 
@@ -103,7 +103,7 @@ $(KERNEL_TARGET): $(OBJ_DIR) $(UTIL_LIB) $(SPIKE_INF_LIB) $(KERNEL_OBJS) $(KERNE
 	@echo "PKE core has been built into" \"$@\"
 
 $(USER_TARGET): $(OBJ_DIR) $(UTIL_LIB) $(USER_OBJS)
-	@echo "linking" $@	...	
+	@echo "linking" $@	...
 	@$(COMPILE) --entry=main $(USER_OBJS) $(UTIL_LIB) -o $@
 	@echo "User app has been built into" \"$@\"
 
