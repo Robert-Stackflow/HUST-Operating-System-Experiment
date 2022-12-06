@@ -1,7 +1,7 @@
 /*
- * Utility functions for process management. 
+ * Utility functions for process management.
  *
- * Note: in Lab1, only one process (i.e., our user application) exists. Therefore, 
+ * Note: in Lab1, only one process (i.e., our user application) exists. Therefore,
  * PKE OS at this stage will set "current" to the loaded user application, and also
  * switch to the old "current" process after trap handling.
  */
@@ -193,8 +193,8 @@ int do_fork( process* parent)
         // address region of child to the physical pages that actually store the code
         // segment of parent process.
         // DO NOT COPY THE PHYSICAL PAGES, JUST MAP THEM.
-        panic( "You need to implement the code segment mapping of child in lab3_1.\n" );
-
+        sprint( "do_fork map code segment at pa:%lx of parent to child at va:%lx.\n",(uint64)lookup_pa(parent->pagetable,parent->mapped_info[i].va),parent->mapped_info[i].va);
+        map_pages(child->pagetable,parent->mapped_info[i].va,parent->mapped_info[i].npages,(uint64)lookup_pa(parent->pagetable,parent->mapped_info[i].va),prot_to_type(PROT_EXEC|PROT_READ,1));
         // after mapping, register the vm region (do not delete codes below!)
         child->mapped_info[child->total_mapped_region].va = parent->mapped_info[i].va;
         child->mapped_info[child->total_mapped_region].npages =
