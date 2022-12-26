@@ -1,6 +1,6 @@
 /*
  * This app fork a child process, and the child process fork a grandchild process.
- * every process waits for its own child exit then prints.                     
+ * every process waits for its own child exit then prints.
  * Three processes also write their own global variables "flag"
  * to different values.
  */
