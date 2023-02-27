@@ -3,7 +3,8 @@
 
 #include "riscv.h"
 
-typedef struct trapframe_t {
+typedef struct trapframe_t
+{
   // space to store context (all common registers)
   /* offset:0   */ riscv_regs regs;
 
@@ -16,22 +17,25 @@ typedef struct trapframe_t {
 
   // kernel page table. added @lab2_1
   /* offset:272 */ uint64 kernel_satp;
-}trapframe;
+} trapframe;
 
 // riscv-pke kernel supports at most 32 processes
 #define NPROC 32
+#define NSEMAPHORE 10
 
 // possible status of a process
-enum proc_status {
-  FREE,            // unused state
-  READY,           // ready state
-  RUNNING,         // currently running
-  BLOCKED,         // waiting for something
-  ZOMBIE,          // terminated but not reclaimed yet
+enum proc_status
+{
+  FREE,    // unused state
+  READY,   // ready state
+  RUNNING, // currently running
+  BLOCKED, // waiting for something
+  ZOMBIE,  // terminated but not reclaimed yet
 };
 
 // types of a segment
-enum segment_type {
+enum segment_type
+{
   CODE_SEGMENT,    // ELF segment
   DATA_SEGMENT,    // ELF segment
   STACK_SEGMENT,   // runtime segment
@@ -40,20 +44,22 @@ enum segment_type {
 };
 
 // the VM regions mapped to a user process
-typedef struct mapped_region {
+typedef struct mapped_region
+{
   uint64 va;       // mapped virtual address
   uint32 npages;   // mapping_info is unused if npages == 0
   uint32 seg_type; // segment type, one of the segment_types
 } mapped_region;
 
 // the extremely simple definition of process, used for begining labs of PKE
-typedef struct process_t {
+typedef struct process_t
+{
   // pointing to the stack used in trap handling.
   uint64 kstack;
   // user page table
   pagetable_t pagetable;
   // trapframe storing the context of a (User mode) process.
-  trapframe* trapframe;
+  trapframe *trapframe;
 
   // points to a page that contains mapped_regions. below are added @lab3_1
   mapped_region *mapped_info;
@@ -71,30 +77,43 @@ typedef struct process_t {
 
   // accounting. added @lab3_3
   int tick_count;
-}process;
+} process;
 
+typedef struct semaphore_t
+{
+  int count;
+  int status;
+  int sleepers;
+} semaphore;
+enum semaphore_status
+{
+  SEM_FREE, // unused state
+  SEM_USING // using state
+};
 // switch to run user app
-void switch_to(process*);
+void switch_to(process *);
 
 // initialize process pool (the procs[] array)
 void init_proc_pool();
 // allocate an empty process, init its vm space. returns its pid
-process* alloc_process();
+process *alloc_process();
 // reclaim a process, destruct its vm space and free physical pages.
-int free_process( process* proc );
+int free_process(process *proc);
 // fork a child from parent
-int do_fork(process* parent);
+int do_fork(process *parent);
 // initialize process pool (the procs[] array)
 void init_proc_pool();
 // allocate an empty process, init its vm space. returns its pid
-process* alloc_process();
+process *alloc_process();
 // reclaim a process, destruct its vm space and free physical pages.
-int free_process( process* proc );
+int free_process(process *proc);
 // fork a child from parent
-int do_fork(process* parent);
-
+int do_fork(process *parent);
+int sem_new(int value);
+void sem_P(process *proc, int value);
+void sem_V(process *proc, int value);
 // current running process
-extern process* current;
+extern process *current;
 
 // address of the first free page in our simple heap. added @lab2_2
 extern uint64 g_ufree_page;
