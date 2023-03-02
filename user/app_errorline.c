@@ -13,4 +13,3 @@ int main(void) {
   asm volatile("csrw sscratch, 0");
   exit(0);
 }
-

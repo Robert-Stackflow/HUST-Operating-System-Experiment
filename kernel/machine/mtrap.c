@@ -44,6 +44,7 @@ void handle_mtrap() {
     case CAUSE_ILLEGAL_INSTRUCTION:
       // TODO (lab1_2): call handle_illegal_instruction to implement illegal instruction
       // interception, and finish lab1_2.
+      print_errorline();
       handle_illegal_instruction();
       break;
     case CAUSE_MISALIGNED_LOAD:

@@ -37,7 +37,7 @@ typedef struct process_t {
 }process;
 
 void switch_to(process*);
-
+void print_errorline();
 extern process* current;
 
 #endif
